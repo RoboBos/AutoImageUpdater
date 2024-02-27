@@ -1,0 +1,29 @@
+api: hen.io/v1alpath
+kind: AppWatcher
+metadata: 
+  Name: staging-hen-app
+spec:
+  repositoryRef:
+    kind: ClusterRepository
+    name: docker-hub-private
+  image:
+    namespace: library
+    repository: zookeeper
+  source:
+    type:
+      yamlpath:
+        file: "values-staging.yaml"
+        path: ".image.repository" 
+  destination:
+    git:
+      revertTrgger:
+        commitMsgRegex: "revert"
+      type:
+        yamlpath:
+          file: "values-staging.yaml"
+          path: ".image.tag" 
+      backendRef:
+        kind: ClusterBackend
+        name: gitlab-private
+  versioningSchemes:
+    semver: "^0.0"
